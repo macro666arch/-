@@ -83,6 +83,19 @@ upstash.com 用 GitHub 登录 → Create Database（区域尽量与 Render 同�
 3. `https://xxx.vercel.app/api/notices?limit=1` → 返回 JSON（证明 rewrite 打通）
 4. 前端首页能打开 → 登录页 → 问一个「教务处电话 / 选课流程」类问题，确认 RAG 检索与大模型都通
 
+## Render 账户验证（2026-11-09 实测）
+
+新账户第一次 **New Blueprint Instance** / **New Web Service** 时，Render 会弹出
+「Add Card to verify your identity」：需绑定银行卡做 1 美元临时预授权（不会实际扣费，
+也不会自动续费），作为反滥用身份验证。这一步只能由账户本人在控制台完成，
+没有银行卡信息无法继续创建服务；免费实例本身仍然是免费的。
+
+若不方便绑卡，可先用已跑通的备选链路对外提供访问：
+**本机常驻运行五件套 + Cloudflare Tunnel（quick tunnel）**，把本机 3000 端口映射成
+`https://xxx.trycloudflare.com`。优点是零成本、不需要任何平台账户；缺点是电脑不能关机，
+且快速隧道地址每次重启会变（写进参赛材料时要注明「链接失效请联系演示方」）。
+如需固定域名，可在 Cloudflare 账户里建具名隧道绑定自有域名。
+
 ## 注意事项
 
 - Render 免费实例 15 分钟无流量会休眠，首访冷启动 30–60 秒；向量服务同理
