@@ -96,6 +96,14 @@ upstash.com 用 GitHub 登录 → Create Database（区域尽量与 Render 同�
 且快速隧道地址每次重启会变（写进参赛材料时要注明「链接失效请联系演示方」）。
 如需固定域名，可在 Cloudflare 账户里建具名隧道绑定自有域名。
 
+2026-11-09 二次实测补充：
+- `/web/new`（新建网络服务）入口与表单填写全程不弹卡，点击「Deploy web service」提交时才弹出
+  Add Card 验证，**免费实例同样要求绑卡**——即绑卡是账户级前置条件，没有绕过入口。
+- GitHub 连接（Render App 安装）已通过 sudo 密码确认完成，仓库授权就绪；卡点只剩绑卡一步。
+- 用户当前网络下 `console.upstash.com`、`vercel.com`、`signin.koyeb.com`、`huggingface.co`
+  均连接被重置（ERR_CONNECTION_CLOSED / 000），Upstash / Vercel / Koyeb / HF 这几条免卡路线
+  在该网络环境不可用；`upstash.com` 主站、render、supabase、github 正常。换代理节点后可复测。
+
 ## 注意事项
 
 - Render 免费实例 15 分钟无流量会休眠，首访冷启动 30–60 秒；向量服务同理
