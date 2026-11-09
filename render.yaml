@@ -1,0 +1,68 @@
+# Render Blueprint：一次创建「向量服务 + 后端」两个 Free Web Service
+# 用法：Render Dashboard → New → Blueprint → 选本仓库 → 补齐 sync:false 的变量 → Apply
+services:
+  - type: web
+    name: cuc-embedding
+    runtime: docker
+    plan: free
+    rootDir: embedding
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: HOST
+        value: 0.0.0.0
+      - key: EMBED_MODEL
+        value: BAAI/bge-small-zh-v1.5
+
+  - type: web
+    name: cuc-api
+    runtime: docker
+    plan: free
+    rootDir: server
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: NODE_ENV
+        value: production
+      - key: DEEPSEEK_MODEL
+        value: deepseek-chat
+      - key: DEEPSEEK_API_URL
+        value: https://api.deepseek.com/chat/completions
+      - key: JWT_EXPIRES_IN
+        value: 2h
+      - key: REFRESH_TOKEN_EXPIRES_DAYS
+        value: "30"
+      - key: OCR_PROVIDER
+        value: tesseract
+      - key: NAU_KB_PATH
+        value: ./knowledge-base/NAU_KNOWLEDGE_BASE.md
+      - key: ALLOWED_EMAIL_DOMAINS
+        value: cuc.edu.cn
+      - key: ENABLE_FEISHU_REMIND
+        value: "false"
+      - key: ENABLE_FRESHNESS_CRON
+        value: "false"
+
+      # 以下为密钥 / 外部服务地址，绝不入库，需在 Render 控制台手动填写
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: DEEPSEEK_API_KEY
+        sync: false
+      - key: ENCRYPTION_KEY
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: EMBEDDING_URL
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
