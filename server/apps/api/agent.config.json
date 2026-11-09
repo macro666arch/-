@@ -1,0 +1,21 @@
+{
+  "model": "",
+  "temperature": 0.35,
+  "maxSteps": 4,
+  "maxToolResultChars": 1400,
+  "maxHistoryTurns": 8,
+  "skillsDir": "skills",
+  "mcpConfig": "mcp.json",
+  "tools": {
+    "campusSearch": true,
+    "processDetail": true,
+    "contact": true,
+    "calendar": true,
+    "serviceHours": true,
+    "notice": true,
+    "faq": true,
+    "policy": true,
+    "readSkill": true,
+    "mcp": true
+  }
+}

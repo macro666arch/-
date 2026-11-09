@@ -1,0 +1,14 @@
+{
+  "name": "nau-ai-advisor",
+  "private": true,
+  "workspaces": [
+    "apps/api"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/api",
+    "build": "npm run build --workspace=apps/api",
+    "lint": "npm run lint --workspace=apps/api",
+    "test": "npm run test --workspace=apps/api"
+  },
+  "devDependencies": {}
+}

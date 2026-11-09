@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+"""Embedding server for cloud deployment (Render/Docker).
+Listens on 0.0.0.0:$PORT (default 9430), accepts POST /embed with JSON {"text": "..."}.
+Returns JSON {"embedding": [...512 floats...]}.
+Model: BAAI/bge-small-zh-v1.5 via fastembed (weights auto-downloaded on first start).
+"""
+import json
+import os
+from http.server import HTTPServer, BaseHTTPRequestHandler
+from fastembed import TextEmbedding
+
+MODEL_NAME = os.environ.get("EMBED_MODEL", "BAAI/bge-small-zh-v1.5")
+PORT = int(os.environ.get("PORT", "9430"))
+HOST = os.environ.get("HOST", "0.0.0.0")
+
+print(f"Loading {MODEL_NAME}...", flush=True)
+model = TextEmbedding(MODEL_NAME)
+# Warm up
+list(model.embed(["warmup"]))
+print(f"Model ready. Listening on {HOST}:{PORT}", flush=True)
+
+
+class Handler(BaseHTTPRequestHandler):
+    def log_message(self, *args): pass  # suppress access logs
+
+    def do_POST(self):
+        if self.path != "/embed":
+            self.send_error(404)
+            return
+        length = int(self.headers.get("Content-Length", 0))
+        body = self.rfile.read(length)
+        try:
+            data = json.loads(body)
+            text = str(data.get("text", ""))[:8192]
+            embedding = list(list(model.embed([text]))[0])
+            resp = json.dumps({"embedding": [float(x) for x in embedding]}).encode()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", len(resp))
+            self.end_headers()
+            self.wfile.write(resp)
+        except Exception as e:
+            self.send_error(500, str(e))
+
+    def do_GET(self):
+        if self.path == "/health":
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b"ok")
+        else:
+            self.send_error(404)
+
+
+if __name__ == "__main__":
+    server = HTTPServer((HOST, PORT), Handler)
+    server.serve_forever()

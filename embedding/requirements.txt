@@ -1,0 +1,3 @@
+# 本地向量服务依赖（embedding_server.py / embed.py）
+# 安装：.venv\Scripts\python.exe -m pip install -r requirements.txt
+fastembed>=0.4,<1
